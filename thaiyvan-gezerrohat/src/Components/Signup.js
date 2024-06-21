@@ -3,10 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api';
 import { Container, TextField, Button, Typography, Box, Alert } from '@mui/material';
 
-const Login = () => {
+const Signup = () => {
   const [form, setForm] = useState({
     email: '',
-    password: ''
+    password: '',
+    name: '',
+    city: '',
+    region: '',
+    age: '',
   });
 
   const [message, setMessage] = useState('');
@@ -19,17 +23,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/users/login', null, {
-        params: {
-          username: form.email,
-          password: form.password
-        }
-      });
-      localStorage.setItem('token', response.data.id_token);
-      setMessage('Login successful');
-      setTimeout(() => navigate('/dashboard'), 2000);
+      const response = await api.post('/users/register', form);
+      setMessage('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
     } catch (error) {
-      setMessage('Login failed. Please try again.');
+      setMessage('Échec de l\'inscription. Veuillez réessayer.');
       console.error(error.response ? error.response.data : error.message);
     }
   };
@@ -38,17 +38,21 @@ const Login = () => {
     <Container>
       <Box mt={5}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Se connecter
+          Sign Up
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField fullWidth margin="normal" type="email" name="email" label="Email" onChange={handleChange} />
           <TextField fullWidth margin="normal" type="password" name="password" label="Mot de passe" onChange={handleChange} />
+          <TextField fullWidth margin="normal" name="name" label="Nom" onChange={handleChange} />
+          <TextField fullWidth margin="normal" name="city" label="Ville" onChange={handleChange} />
+          <TextField fullWidth margin="normal" name="region" label="Région" onChange={handleChange} />
+          <TextField fullWidth margin="normal" type="number" name="age" label="Âge" onChange={handleChange} />
           <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
-            Se connecter
+            S'inscrire
           </Button>
         </form>
         {message && (
-          <Alert severity={message.includes('successful') ? 'success' : 'error'} style={{ marginTop: 20 }}>
+          <Alert severity={message.includes('réussie') ? 'success' : 'error'} style={{ marginTop: 20 }}>
             {message}
           </Alert>
         )}
@@ -57,4 +61,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

@@ -22,13 +22,9 @@ public class UserService {
     private static final String AUTHORITY_USER = "ROLE_USER";
 
     private final UserRepository userRepository;
-
     private final AuthorityRepository authorityRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final TokenProvider tokenProvider;
-
     private final AuthenticationManager authenticationManager;
 
     public User registerUser(User user) {
