@@ -6,6 +6,10 @@ import com.example.demo.repository.AuthorityRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.TokenProvider;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Example;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,15 +26,13 @@ public class UserService {
     private static final String AUTHORITY_USER = "ROLE_USER";
 
     private final UserRepository userRepository;
-
     private final AuthorityRepository authorityRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final TokenProvider tokenProvider;
-
     private final AuthenticationManager authenticationManager;
 
+    @Caching(
+            evict = @CacheEvict(value = "findAllUsers", allEntries = true))
     public User registerUser(User user) {
         Set<Authority> authorities = new HashSet<>(Collections.singletonList(getAuthority()));
         user.setAuthorities(authorities);
@@ -39,6 +41,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Cacheable(value = "findAllUsers")
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
