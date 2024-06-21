@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,12 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "events")
+@Table(name = "events", indexes = {
+        @Index(name = "idx_event_name", columnList = "name"),
+        @Index(name = "idx_event_city", columnList = "city"),
+        @Index(name = "idx_event_region", columnList = "region"),
+        @Index(name = "idx_event_type", columnList = "type")
+})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Event {
@@ -20,28 +26,18 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id", nullable = false)
     private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id")
     private User organizer;
-
     @Column(nullable = false)
     private String name;
-
     private String city;
-
     private String region;
-
     private String type;
-
     private LocalDateTime date;
-
     private int remainingPlaces;
-
     private boolean isPaid;
-
     private String location;
-
     private double price;
 
     @ElementCollection

@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,10 +9,9 @@ import org.hibernate.annotations.BatchSize;
 
 import java.util.List;
 
-
 @Entity
 @Data
-@Table(name = "interests")
+@Table(name = "interests", indexes = @Index(name = "idx_interest_name", columnList = "name"))
 @NoArgsConstructor
 @AllArgsConstructor
 public class Interest {

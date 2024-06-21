@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,8 @@ import java.util.Set;
 @Data
 @Table(name = "users", indexes = {
         @Index(name = "idx_user_email", columnList = "email"),
+        @Index(name = "idx_user_city", columnList = "city"),
+        @Index(name = "idx_user_region", columnList = "region"),
 })
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,14 +42,14 @@ public class User {
 
     private int age;
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @BatchSize(size = 10)
     @JoinTable(name = "user_interest",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "interest_id"))
     private List<Interest> interests;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @BatchSize(size = 10)
     private List<Rating> ratings;
 
